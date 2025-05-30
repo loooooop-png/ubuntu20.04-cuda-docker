@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  ubuntu-cuda:
+    image: loooooopng/cuda12.2.2-ubuntu20.04-ssh:v0
+    container_name: ubuntu_cuda_container #change the name to what you want
+    runtime: nvidia
+    stdin_open: true 
+    tty: true
+    restart: always
+    ports:
+      - "22:22" #change the first 22 to the port you want to map
+    volumes:
+      - ./workspace:/workspace
+    deploy:
+      resources:
+        limits:
+          cpus: "16.00" #change the cpus to what you want
+          memory: 64G #change the memory to what you want
+        reservations:
+          memory: 1G
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - SSH_ROOT_PASSWORD=root
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+volumes:
+  workspace:
